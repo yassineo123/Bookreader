@@ -1,21 +1,163 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="nl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book reader</title>
-  <link rel="stylesheet" href="css/main.css">                          
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Bibliotheek - Home</title>
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- 🔵 TOEGEVOEGD: script.js zodat de homepage ook API + search + trending kan gebruiken -->
+    <script src="script.js" defer></script>
 </head>
 <body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container navbar-content">
+            <a href="index.html" class="logo-link">
+                <i data-lucide="library" class="logo-icon"></i>
+                <h1>Open Bibliotheek</h1>
+            </a>
+            <nav class="nav-menu">
+                <a href="mijn-boekenplank.html" class="nav-button">
+                    Mijn Boekenplank
+                </a>
+            </nav>
+        </div>
+    </header>
 
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay">
+            <img src="/img/library_image.png" alt="Library background" class="hero-bg">
+        </div>
+        <div class="hero-content container">
+            <h2 class="hero-title">Welkom bij de Open Bibliotheek</h2>
+            <p class="hero-subtitle">
+                Ontdek miljoenen boeken, bewaar je favorieten en deel je leeslijst
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-input-wrapper">
+                        <i data-lucide="search" class="search-icon"></i>
+
+                        <!-- 🟡 AANGEPAST: id toegevoegd zodat script.js het element kan vinden -->
+                        <input id="search-input" type="text" placeholder="Zoek naar boeken, auteurs, ISBN..." class="search-input">
+                    </div>
+
+                    <!-- 🟡 AANGEPAST: id toegevoegd zodat script.js de button herkent -->
+                    <button id="search-button" class="search-button">Zoeken</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 🔵 TOEGEVOEGD: Zoekresultaten sectie (zoals in zoek-simpel.html) -->
+    <section id="search-results-section" class="search-results-section" style="display:none;">
+        <div class="container">
+            <div class="search-results-header">
+                <h2 class="section-title" id="search-results-title">Zoekresultaten</h2>
+                <button id="clear-search" class="view-all-button">Wissen</button>
+            </div>
+
+            <div id="search-results-grid" class="books-grid"></div>
+
+            <div id="search-loading" class="search-loading" style="display:none;">
+                <div class="loading-spinner"></div>
+                <p>Boeken aan het zoeken...</p>
+            </div>
+
+            <div id="search-error" class="search-error" style="display:none;">
+                <p>Er ging iets mis. Probeer opnieuw.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Boekenlijst -->
+    <section class="trending-section">
+        <div class="container">
+            <div class="trending-header">
+                <h2 class="section-title">Boekenlijst</h2>
+                <a href="boekenlijst.html" class="view-all-button">bekijk alles</a>
+            </div>
+
+            <!-- 🔵 TOEGEVOEGD: hier komen willekeurige boeken van de API -->
+            <div id="trending-books" class="books-grid"></div>
+        </div>
+    </section>
+
+    <!-- 🔵 TOEGEVOEGD: script om random boeken te laden -->
+    <script>
+        async function loadTrendingBooks() {
+            try {
+                // 20 random boeken uit Gutendex
+                const randomPage = Math.floor(Math.random() * 100) + 1;
+                const response = await fetch(`https://gutendex.com/books/?page=${randomPage}`);
+                const data = await response.json();
+
+                const books = data.results.slice(0, 5).map(convertBookData);
+                const container = document.getElementById('trending-books');
+
+                container.innerHTML = books.map(book => createBookCard(book, false)).join('');
+
+                // click events
+                container.querySelectorAll('.book-card-trending').forEach(card => {
+                    const bookId = card.dataset.bookId;
+                    const book = books.find(b => b.id === bookId);
+
+                    card.addEventListener('click', () => {
+                        saveBookData(book);
+                        window.location.href = `boek-detail.html?id=${bookId}`;
+                    });
+                });
+            } catch (err) {
+                console.error('Trending books error:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadTrendingBooks);
+    </script>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-content">
+            <i data-lucide="users" class="cta-icon"></i>
+            <h2 class="cta-title">Maak je eigen boekenplank</h2>
+            <p class="cta-subtitle">
+                Bewaar boeken die je gelezen hebt en maak leeslijsten.
+            </p>
+            <a href="mijn-boekenplank.html" class="cta-button">
+                Ga naar Mijn Boekenplank
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">Over ons</h3>
+                    <p class="footer-text">
+                        Open Bibliotheek is een platform voor boekenliefhebbers om boeken te ontdekken,
+                        bewaren en delen.
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Links</h3>
+                    <ul class="footer-list">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="mijn-boekenplank.html" class="footer-link">Mijn Boekenplank</a></li>
+                        <li><a href="#" class="footer-link">Over</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2025 Open Bibliotheek.</p>
+            </div>
+        </div>
+    </footer>
 </body>
- <h1>Welkom bij de book reader</h1>
- <p>onder text</p>
- <a href="https://fhict.instructure.com/" target="_blank">doorverwijzings link</a>
 </html>
-
-
-
-
-
-

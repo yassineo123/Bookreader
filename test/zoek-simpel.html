@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boeken Zoeken - Gutendex API</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Simpele Header -->
+    <div style="background: #B85C38; color: white; padding: 20px 0; text-align: center;">
+        <h1 style="font-family: 'Merriweather', serif;">Boeken Zoeken</h1>
+        <p style="opacity: 0.9;">Doorzoek 70.000+ klassieke boeken via de Gutendex API</p>
+    </div>
+
+    <!-- Zoek Sectie -->
+    <section style="padding: 60px 20px; background: linear-gradient(135deg, #faf6f0 0%, #f4ebd9 100%);">
+        <div class="container">
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="search-input-wrapper">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input type="text" id="search-input" class="search-input" placeholder="Zoek op titel of auteur (bijv. Shakespeare, Jane Austen)...">
+                    </div>
+                    <button id="search-button" class="search-button">Zoeken</button>
+                </div>
+                
+                <div class="popular-searches">
+                    <span class="popular-label">Voorbeelden:</span>
+                    <button class="popular-link" data-search="Shakespeare">Shakespeare</button>
+                    <button class="popular-link" data-search="Jane Austen">Jane Austen</button>
+                    <button class="popular-link" data-search="Dickens">Dickens</button>
+                    <button class="popular-link" data-search="Mark Twain">Mark Twain</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Zoekresultaten Sectie -->
+    <section id="search-results-section" class="search-results-section" style="display: none;">
+        <div class="container">
+            <div class="search-results-header">
+                <h2 class="section-title" id="search-results-title">Zoekresultaten</h2>
+                <button id="clear-search" class="view-all-button">Wissen</button>
+            </div>
+            
+            <div id="search-results-grid" class="books-grid"></div>
+            
+            <div id="search-loading" class="search-loading" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Boeken aan het zoeken in de Gutendex database...</p>
+            </div>
+            
+            <div id="search-error" class="search-error" style="display: none;">
+                <p>Er is iets misgegaan. Probeer het opnieuw.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Sectie -->
+    <section style="padding: 60px 20px; background: white; text-align: center;">
+        <div class="container" style="max-width: 800px;">
+            <h2 style="font-family: 'Merriweather', serif; margin-bottom: 16px;">Over deze zoekfunctie</h2>
+            <p style="color: #666; line-height: 1.8; margin-bottom: 24px;">
+                Deze zoekfunctie gebruikt de <strong>Gutendex API</strong> om door meer dan 70.000 klassieke boeken 
+                van Project Gutenberg te zoeken. Alle boeken zijn gratis en in het publieke domein.
+            </p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 24px; margin-top: 40px;">
+                <div>
+                    <div style="font-size: 2rem; color: #B85C38; font-weight: bold;">70.000+</div>
+                    <div style="color: #666;">Gratis Boeken</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #B85C38; font-weight: bold;">100%</div>
+                    <div style="color: #666;">Gratis API</div>
+                </div>
+                <div>
+                    <div style="font-size: 2rem; color: #B85C38; font-weight: bold;">60+</div>
+                    <div style="color: #666;">Talen</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; padding: 24px; background: #faf6f0; border-radius: 8px; text-align: left;">
+                <h3 style="font-family: 'Merriweather', serif; margin-bottom: 12px;">💡 Tips voor zoeken:</h3>
+                <ul style="color: #666; line-height: 2;">
+                    <li>Zoek op <strong>auteur</strong>: "Shakespeare", "Jane Austen", "Charles Dickens"</li>
+                    <li>Zoek op <strong>titel</strong>: "Pride and Prejudice", "Romeo and Juliet"</li>
+                    <li>De API bevat alleen <strong>klassieke literatuur</strong> uit het publieke domein</li>
+                    <li>Boeken zijn beschikbaar in <strong>meerdere formaten</strong>: EPUB, Kindle, HTML, TXT</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: #2c2c2c; color: #aaa; padding: 24px; text-align: center;">
+        <p>Data geleverd door <a href="https://gutendex.com" target="_blank" style="color: #B85C38;">Gutendex API</a> (Project Gutenberg)</p>
+        <p style="font-size: 0.9rem; margin-top: 8px;">Alle boeken zijn in het publieke domein</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Boekenplank - Open Bibliotheek</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="container navbar-content">
+            <a href="index.html" class="logo-link">
+                <h1>Open Bibliotheek</h1>
+            </a>
+            <nav class="nav-menu">
+                <a href="index.html" class="nav-button">
+                    Home
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Header -->
+    <section class="hero" id="mijn_boekenplank_image">
+        <div class="hero-overlay">
+            <img src="/img/library_image_2.png" alt="Library background" class="hero-bg">
+        </div>
+        <div class="hero-content container shelf-header">
+            <i data-lucide="book-open" class="shelf-icon"></i>
+            <h2 class="shelf-title">Mijn Boekenplank</h2>
+            <p class="shelf-subtitle">
+                Bewaar en organiseer je favoriete boeken op één plek
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container shelf-main">
+        <div class="add-book-wrapper">
+            <button id="addBookBtn" class="add-book-button">
+                <i data-lucide="plus" class="button-icon"></i>
+                Voeg boek toe
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs-container">
+            <div class="tabs-list">
+                <button class="tab-trigger active" data-tab="toread">
+                    <i data-lucide="book-marked" class="tab-icon"></i>
+                    <span>Wil ik lezen (<span id="toreadCount">0</span>)</span>
+                </button>
+                <button class="tab-trigger" data-tab="read">
+                    <i data-lucide="book-open" class="tab-icon"></i>
+                    <span>Gelezen (<span id="readCount">0</span>)</span>
+                </button>
+            </div>
+
+            <!-- To Read Tab Content -->
+            <div class="tab-content active" id="toread-content">
+                <div id="toread-books" class="books-grid-shelf"></div>
+                <div id="toread-empty" class="empty-state" style="display: none;">
+                    <i data-lucide="book-marked" class="empty-icon"></i>
+                    <h3 class="empty-title">Geen boeken in je leeslijst</h3>
+                    <p class="empty-text">Voeg boeken toe die je graag wilt lezen!</p>
+                </div>
+            </div>
+
+            <!-- Read Tab Content -->
+            <div class="tab-content" id="read-content">
+                <div id="read-books" class="books-grid-shelf"></div>
+                <div id="read-empty" class="empty-state" style="display: none;">
+                    <i data-lucide="book-open" class="empty-icon"></i>
+                    <h3 class="empty-title">Nog geen gelezen boeken</h3>
+                    <p class="empty-text">Markeer boeken die je hebt gelezen!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add Book Modal -->
+    <div id="addBookModal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Nieuw boek toevoegen</h2>
+                <p class="modal-description">Voeg een nieuw boek toe aan je collectie</p>
+            </div>
+            <form id="addBookForm" class="modal-form">
+                <div class="form-group">
+                    <label for="bookTitle" class="form-label">Titel *</label>
+                    <input type="text" id="bookTitle" class="form-input" placeholder="Bijv. De Ontdekking van de Hemel" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookAuthor" class="form-label">Auteur *</label>
+                    <input type="text" id="bookAuthor" class="form-input" placeholder="Bijv. Harry Mulisch" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookCover" class="form-label">Cover URL (optioneel)</label>
+                    <input type="url" id="bookCover" class="form-input" placeholder="https://...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bookNotes" class="form-label">Notities (optioneel)</label>
+                    <textarea id="bookNotes" class="form-textarea" placeholder="Je gedachten over dit boek..." rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input type="radio" name="bookStatus" value="toread" checked>
+                            <span>Wil ik lezen</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="bookStatus" value="read">
+                            <span>Heb ik gelezen</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="modal-cancel-btn">Annuleer</button>
+                    <button type="submit" class="modal-submit-btn">Toevoegen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3 class="footer-heading">Over ons</h3>
+                    <p class="footer-text">
+                        Open Bibliotheek is een platform voor boekenliefhebbers om boeken te ontdekken,
+                        bewaren en delen.
+                    </p>
+                </div>
+                <div class="footer-column">
+                    <h3 class="footer-heading">Links</h3>
+                    <ul class="footer-list">
+                        <li><a href="index.html" class="footer-link">Home</a></li>
+                        <li><a href="mijn-boekenplank.html" class="footer-link">Mijn Boekenplank</a></li>
+                        <li><a href="#" class="footer-link">Over</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 Open Bibliotheek.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
