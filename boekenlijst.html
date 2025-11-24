@@ -31,4 +31,112 @@
             <p class="hero-subtitle">
                 ontdek alle boeken die wij aanbieden.
             </p>
-            
+        </div> 
+    </section>
+    <!-- Grid -->
+    <section>
+        <div class="container">
+            <div id="all-books-grid" class="books-grid"></div>
+
+            <!-- Loading -->
+            <div id="all-books-loading" class="search-loading" style="display:none;">
+                <div class="loading-spinner"></div>
+                <p>Boeken laden…</p>
+            </div>
+
+            <!-- Error -->
+            <div id="all-books-error" class="search-error" style="display:none;">
+                <p>Kon de boeken niet laden. Probeer opnieuw.</p>
+            </div>
+
+            <!-- Meer laden knop -->
+            <div style="text-align:center; margin-top: 30px;">
+                <button id="load-more-books" class="view-all-button">
+                    Meer boeken laden
+                </button>
+            </div>
+        </div>
+    </section>
+
+
+
+
+    <!-- Script -->
+    <script src="script.js"></script>
+
+    <script>
+    // ============================
+    //  BOEKENLIJST PAGINATION PAGE
+    // ============================
+
+    let nextPageUrl = "https://gutendex.com/books/?page=1";
+
+    async function loadBooks() {
+        const grid = document.getElementById("all-books-grid");
+        const loader = document.getElementById("all-books-loading");
+        const error = document.getElementById("all-books-error");
+
+        loader.style.display = "block";
+        error.style.display = "none";
+
+        try {
+            const response = await fetch(nextPageUrl);
+            const data = await response.json();
+
+            nextPageUrl = data.next; // volgende pagina
+
+            const books = data.results.map(convertBookData);
+
+            // Voeg boeken toe aan grid
+            grid.innerHTML += books.map(book => createBookCard(book, true)).join('');
+
+            // Event listeners koppelen (boek-detail, buttons)
+            grid.querySelectorAll('.book-card-trending').forEach(card => {
+                const bookId = card.dataset.bookId;
+                const book = books.find(b => b.id === bookId);
+
+                card.addEventListener('click', (e) => {
+                    if (!e.target.closest('.book-action-btn')) {
+                        saveBookData(book);
+                        window.location.href = `boek-detail.html?id=${bookId}`;
+                    }
+                });
+
+                card.querySelectorAll('.book-action-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const action = btn.dataset.action;
+                        handleBookAction(book, action, btn);
+                    });
+                });
+            });
+
+            loader.style.display = "none";
+
+            // Verberg de knop als er geen volgende pagina is
+            if (!data.next) {
+                document.getElementById("load-more-books").style.display = "none";
+            }
+
+        } catch (err) {
+            loader.style.display = "none";
+            error.style.display = "block";
+        }
+    }
+
+    // Eerste load
+    loadBooks();
+
+    // Meer laden knop
+    document.getElementById("load-more-books").addEventListener("click", loadBooks);
+
+    </script>
+
+        <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 Open Bibliotheek.</p>
+        </div>
+    </footer>
+</body>
+</html>

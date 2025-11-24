@@ -161,6 +161,75 @@
                 <p>© 2025 Open Bibliotheek.</p>
             </div>
         </div>
+        <script>
+/* ===============================
+   LOAD BOOKS FROM LOCALSTORAGE
+================================*/
+
+function loadShelf() {
+    const toRead = JSON.parse(localStorage.getItem("wantToRead")) || [];
+    const read    = JSON.parse(localStorage.getItem("read")) || [];
+
+    // DOM elementen
+    const toReadGrid = document.getElementById("toread-books");
+    const readGrid   = document.getElementById("read-books");
+    const toReadEmpty = document.getElementById("toread-empty");
+    const readEmpty   = document.getElementById("read-empty");
+
+    const toReadCount = document.getElementById("toreadCount");
+    const readCount   = document.getElementById("readCount");
+
+    // Teller bijwerken
+    toReadCount.textContent = toRead.length;
+    readCount.textContent   = read.length;
+
+    // Boekkaart HTML generator
+    function makeCard(book) {
+        return `
+            <div class="book-card-shelf">
+                <img src="${book.cover}" class="book-cover-shelf" alt="${book.title}">
+                <div class="book-info-shelf">
+                    <h3>${book.title}</h3>
+                    <p>${book.authorName || book.author}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    // TO READ
+    if (toRead.length === 0) {
+        toReadEmpty.style.display = "block";
+        toReadGrid.innerHTML = "";
+    } else {
+        toReadEmpty.style.display = "none";
+        toReadGrid.innerHTML = toRead.map(makeCard).join("");
+    }
+
+    // READ
+    if (read.length === 0) {
+        readEmpty.style.display = "block";
+        readGrid.innerHTML = "";
+    } else {
+        readEmpty.style.display = "none";
+        readGrid.innerHTML = read.map(makeCard).join("");
+    }
+}
+
+// Tabs wisselen
+document.querySelectorAll(".tab-trigger").forEach(btn => {
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-trigger").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab + "-content").classList.add("active");
+    });
+});
+
+// Laden zodra pagina opent
+document.addEventListener("DOMContentLoaded", loadShelf);
+</script>
+
     </footer>
 </body>
 </html>

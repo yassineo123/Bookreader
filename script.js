@@ -1,3 +1,5 @@
+
+
 // ===========================
 // API Configuration
 // ===========================
@@ -136,11 +138,19 @@ async function searchBooks(query) {
         if (!response.ok) throw new Error('API request failed');
         
         const data = await response.json();
+        console.log(data.count);
+        console.log(data);
+        writePimd(data.results);
         return data.results.map(convertBookData);
     } catch (error) {
         console.error('Error searching books:', error);
         throw error;
     }
+}
+
+function writePimd(data){
+    console.log('WritePimD function');
+    console.log(data);
 }
 
 // ===========================
@@ -188,51 +198,40 @@ function createBookCard(book, showActions = false) {
     `;
 }
 
-// Display search results
 function displaySearchResults(books, query) {
     const resultsSection = document.getElementById('search-results-section');
     const resultsGrid = document.getElementById('search-results-grid');
     const resultsTitle = document.getElementById('search-results-title');
-    const loadingEl = document.getElementById('search-loading');
-    const errorEl = document.getElementById('search-error');
-    
-    loadingEl.style.display = 'none';
-    errorEl.style.display = 'none';
-    
+    // const loadingEl = document.getElementById('search-loading');
+    // const errorEl = document.getElementById('search-error');
+
+    // loadingEl.style.display = 'none';
+    // errorEl.style.display = 'none';
+
     if (books.length === 0) {
-        resultsTitle.textContent = 'Geen resultaten gevonden';
+        resultsTitle.textContent = `Geen resultaten voor "${query}"`;
         resultsGrid.innerHTML = '<p class="empty-text">Probeer een andere zoekopdracht.</p>';
     } else {
         resultsTitle.textContent = `${books.length} resultaten voor "${query}"`;
-        resultsGrid.innerHTML = books.map(book => createBookCard(book, true)).join('');
-        
-        // Add click handlers for book cards
-        resultsGrid.querySelectorAll('.book-card-trending').forEach(card => {
-            const bookId = card.dataset.bookId;
-            const book = books.find(b => b.id === bookId);
-            
-            // Click on card goes to detail
-            card.addEventListener('click', (e) => {
-                if (!e.target.closest('.book-action-btn')) {
-                    saveBookData(book);
-                    window.location.href = `boek-detail.html?id=${bookId}`;
-                }
+        resultsGrid.innerHTML = '';
+
+        // Gebruik van for-loop om de resultaten in te voegen
+        for (let i = 0; i < books.length; i++) {
+            const book = books[i];
+            const bookCardHTML = createBookCard(book);
+            resultsGrid.insertAdjacentHTML('beforeend', bookCardHTML);
+
+            // Voeg click event toe aan elke kaart
+            const cardEl = resultsGrid.querySelector(`.book-card-trending[data-book-id="${book.id}"]`);
+            cardEl.addEventListener('click', () => {
+                sessionStorage.setItem('currentBook', JSON.stringify(book));
+                window.location.href = `boek-detail.html?id=${book.id}`;
             });
-            
-            // Action buttons
-            const actionBtns = card.querySelectorAll('.book-action-btn');
-            actionBtns.forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const action = btn.dataset.action;
-                    handleBookAction(book, action, btn);
-                });
-            });
-        });
+        }
     }
-    
+
     resultsSection.style.display = 'block';
-    resultsSection.scrollIntoView({ behavior: 'smooth' });
+    resultsSection.scrollIntoView({behavior:'smooth'});
 }
 
 // Handle book actions (add to lists)
@@ -298,19 +297,50 @@ function initSearch() {
     const loadingEl = document.getElementById('search-loading');
     const errorEl = document.getElementById('search-error');
     const resultsSection = document.getElementById('search-results-section');
-    const trendingSection = document.querySelector('.trending-section');
-
+    
     async function performSearch(query) {
-    if (!query.trim()) return;
-
-    // ⬇️ Nieuw toegevoegd
-    const trendingSection = document.querySelector('.trending-section');
-    if (trendingSection) trendingSection.style.display = 'none';
-
-    loadingEl.style.display = 'block';
-    errorEl.style.display = 'none';
-    resultsSection.style.display = 'block';
-    document.getElementById('search-results-grid').innerHTML = '';
+        if (!query.trim()) return;
+        
+        if (loadingEl) loadingEl.style.display = 'block';
+        if (errorEl) errorEl.style.display = 'none';
+        if (resultsSection) resultsSection.style.display = 'block';
+        const resultsGrid = document.getElementById('search-results-grid');
+        if (resultsGrid) resultsGrid.innerHTML = '';
+        
+        try {
+            // API call
+            document.getElementById("trending-section").style.display = "none";
+            const books = await searchBooks(query);
+            displaySearchResults(books, query);
+        } catch (error) {
+            console.error('Fout bij zoeken:', error);
+            // loadingEl.style.display = 'none';
+            // errorEl.style.display = 'block';
+        }
+    }
+    
+    searchButton?.addEventListener('click', () => {
+        performSearch(searchInput.value);
+    });
+    
+    searchInput?.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            performSearch(searchInput.value);
+        }
+    });
+    
+    clearButton?.addEventListener('click', () => {
+        resultsSection.style.display = 'none';
+        searchInput.value = '';
+    });
+    
+    popularLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            const query = link.dataset.search;
+            searchInput.value = query;
+            performSearch(query);
+        });
+    });
 }
 
 // Haal willekeurige boeken op uit Gutendex
@@ -328,7 +358,7 @@ async function loadRandomBooks() {
         const data = await response.json();
 
 
-        const randomBooks = data.results.slice(0, 6).map(convertBookData);
+        const randomBooks = data.results.slice(0, 5).map(convertBookData);
 
 
 
