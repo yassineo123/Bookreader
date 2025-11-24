@@ -1,4 +1,9 @@
-
+// Javascript moest ik uiteindelijk ook toevoegen voor de funties zoals zoeken en trending boeken laten zien op de homepage.
+// Ik kwam hier pas later achter omdat ik dacht dat alles via html en css kon.
+// voor de code heb ik chatgpt gebruikt en visual studio code agent mode.
+// Daarnaast heb ik ook w3schools gebruikt als de uitleg van ai mij niet duidelijk genoeg was: https://www.w3schools.com/js/
+// Ik durf niet te zeggen dat ik hetzelfde begrip van javascript heb als van html en css, maar ik begrijp de basis nu wel beter.
+// in mijn volgende project hoop ik meer ervaring met javascript op te doen.
 
 // ===========================
 // API Configuration

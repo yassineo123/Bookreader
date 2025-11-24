@@ -1,3 +1,8 @@
+<!-- Voor de HTML bestand begon ik met de online tutorial van Dani Krossing, (de specefieke videos staan in de documentatie).
+Ik wou eerst de basis leren voordat ik ai gebruikte en grote lappen tekst ging importeren. 
+Uiteindelijk heeft het wel geholpen, sinds ik een betere grip heb op de taal en aanpassingen kan maken waar ik wil. 
+Hetzelfde geldt voor de andere HTML pagina's.-->
+
 <!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -10,7 +15,8 @@
     <!--script.js moet geladen worden op de homepage -->
     <script defer src="script.js"></script>
 
-    <!--nieuwe JS voor trending boeken -->
+    <!--nieuwe JS voor trending boeken (uiteindelijk deels verouderd. 
+    Boeken worden wel opgehaald maar heb geen trending section kunnen maken)-->
     <script defer>
         document.addEventListener("DOMContentLoaded", async () => {
             const container = document.getElementById("trending-books-container");
@@ -18,7 +24,7 @@
             if (!container) return;
 
             try {
-                // haal willekeurige boeken op uit Gutendex
+                // haal willekeurige boeken op uit Gutendex voor de hoofdpagina
                 const res = await fetch("https://gutendex.com/books/?page=2");
                 const data = await res.json();
 
@@ -50,7 +56,7 @@
                         });
                     });
                 });
-
+                // Error afvangen
             } catch (err) {
                 console.error("Error loading trending books:", err);
                 container.innerHTML = "<p>Kon voorbeeldboeken niet laden.</p>";
@@ -75,7 +81,7 @@
         </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- Hero Sectie -->
     <section class="hero">
         <div class="hero-overlay">
             <img src="/img/library_image.png" alt="Library background" class="hero-bg">
